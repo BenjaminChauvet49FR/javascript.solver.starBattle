@@ -1,8 +1,9 @@
 /**
 Sets the list of spaces for each row and column (might be exportated)
 Hyphothesis : all non-banned regions are numbered from 0 to n-1 ; banned spaces have lower-than-0 numbers
+Exit : all spaces within a region are in reading order (top to bottom, then left to right)
 */
-function listSpacesPerRegion(p_regionGrid, p_xLength, p_yLength){
+function listSpacesByRegion(p_regionGrid, p_xLength, p_yLength){
 	var ix,iy;
 	var lastRegionNumber = 0;
 	for(iy = 0;iy < p_yLength;iy++){
@@ -22,7 +23,7 @@ function listSpacesPerRegion(p_regionGrid, p_xLength, p_yLength){
 			}
 		}
 	}
-	console.log(listOfListsAnswer);
+	//See hyphothesis above !
 	return listOfListsAnswer;
 }
 
