@@ -1,7 +1,7 @@
 //--------------------
 //Everything that suits the initialization of a grid
 //TODO merge this initialization with the one in "input". It should be possible, right ?
-var xyLength = 8; //TODO dieu que c'est moche
+/*var xyLength = 8; //TODO dieu que c'est moche
 global.borderGrid = generateGridWall(xyLength, xyLength); //TODO we assume it's a square space
 global.xLength = xyLength;
 global.yLength = xyLength;
@@ -13,7 +13,11 @@ global.notPlacedYet = {
 }
 global.regionGrid = wallGridToRegionGrid(global.borderGrid);
 global.spacesByRegion = listSpacesByRegion(global.regionGrid,global.xLength,global.yLength);
-adaptCanvas(canevas,pix,global);
+adaptCanvas(canevas,pix,global);*/
+
+pix.marginGrid = {left:32,up:32,right:32,down:32};
+loadFreshNewGrid(canevas, pix, global, generateGridWall(1,1)); 
+//TODO (of course the grid (1,1) is a dummy grid, but at least it has as much rows as columns as regions
 
 //--------------------
 //The main draw function (at start)

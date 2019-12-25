@@ -25,7 +25,8 @@ function drawAroundIndications(p_context,p_pix,p_colorDigits,p_global){
 //TODO là aussi
 //Hyphothesis (non mandatory but better) : in each region, the first space is true.
 function drawInsideIndications(p_context,p_pix,p_colorDigits,p_global){
-	p_context.font = "8px Arial";
+	const fontSize = p_pix.borderSpace;
+	p_context.font = fontSize+"px Arial";
 	p_context.fillStyle = "#008800";
 	var indexXFirstRegionSpace,indexYFirstRegionSpace;
 	var pixLeft,pixUp;
@@ -33,7 +34,7 @@ function drawInsideIndications(p_context,p_pix,p_colorDigits,p_global){
 	for(var i=0;i<p_global.xLength;i++){
 		indexXFirstRegionSpace = p_global.spacesByRegion[i][0].x;
 		indexYFirstRegionSpace = p_global.spacesByRegion[i][0].y;
-		pixLeft = p_pix.marginGrid.left+p_pix.sideSpace*indexXFirstRegionSpace;//TODO renommer ces variables
+		pixLeft = p_pix.marginGrid.left+p_pix.sideSpace*indexXFirstRegionSpace+p_pix.borderSpace+1;//TODO renommer ces variables
 		pixDown = p_pix.marginGrid.up+p_pix.sideSpace*indexYFirstRegionSpace+10;//TODO Le 10 est arbitraire, y penser
 		textToWrite = p_global.notPlacedYet.regions[i].Os+" "+p_global.notPlacedYet.regions[i].Xs;
 		p_context.fillText(textToWrite,pixLeft,pixDown);
