@@ -25,7 +25,7 @@ function drawAroundIndications(p_context,p_pix,p_colorDigits,p_global){
 //TODO là aussi
 //Hyphothesis (non mandatory but better) : in each region, the first space is true.
 function drawInsideIndications(p_context,p_pix,p_colorDigits,p_global){
-	const fontSize = p_pix.borderSpace;
+	const fontSize = p_pix.sideSpace/3;
 	p_context.font = fontSize+"px Arial";
 	p_context.fillStyle = "#008800";
 	var indexXFirstRegionSpace,indexYFirstRegionSpace;
