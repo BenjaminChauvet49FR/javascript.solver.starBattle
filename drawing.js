@@ -41,3 +41,25 @@ function drawInsideIndications(p_context,p_pix,p_colorDigits,p_global){
 	}
 	
 }
+
+function drawSpaces(p_context,p_pix,p_global){
+	const fontSize = p_pix.sideSpace;
+	p_context.font = fontSize+"px Arial";
+	p_context.fillStyle = "#000000";
+	const pixStartX = p_pix.marginGrid.left+p_pix.borderSpace;  
+	var pixDrawX = pixStartX;	
+	var pixDrawY = p_pix.marginGrid.up+p_pix.sideSpace-p_pix.borderSpace;
+	var ix,iy;
+	var logDebug;
+	for(iy = 0;iy < p_global.length;iy++){
+		logDebug = "";
+		for(ix = 0;ix < p_global.length;ix++){
+			if ((p_global.answerGrid[iy][ix] != UNDECIDED) && (p_global.regionGrid[iy][ix] != BANNED)){
+				p_context.fillText(p_global.answerGrid[iy][ix],pixDrawX,pixDrawY);	
+			}
+			pixDrawX+=p_pix.sideSpace;
+		}
+		pixDrawY+=p_pix.sideSpace;
+		pixDrawX = pixStartX;
+	}
+}
