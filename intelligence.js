@@ -51,6 +51,7 @@ function putNew(p_global,p_x,p_y,p_symbol){
 		return OK;
 	}
 	if (p_global.answerGrid[p_y][p_x] != p_symbol){
+		console.log("NOOOO !");
 		return ERROR;
 	}
 
@@ -64,12 +65,12 @@ remove = function(p_global,p_x,p_y){
 	var indexRegion = p_global.regionGrid[p_y][p_x];
 	var symbol = p_global.answerGrid[p_y][p_x];
 	p_global.answerGrid[p_y][p_x] = UNDECIDED;
-	if (p_symbol == STAR){
+	if (symbol == STAR){
 		p_global.notPlacedYet.regions[indexRegion].Os++;
 		p_global.notPlacedYet.rows[p_y].Os++;
 		p_global.notPlacedYet.columns[p_x].Os++;
 	}
-	if (p_symbol == NO_STAR){
+	if (symbol == NO_STAR){
 		p_global.notPlacedYet.regions[indexRegion].Xs++;
 		p_global.notPlacedYet.rows[p_y].Xs++;
 		p_global.notPlacedYet.columns[p_x].Xs++;	
@@ -94,8 +95,9 @@ function tryToPutNew(p_global,p_x,p_y,p_symbol){
 		x = nextEvent.x;
 		y = nextEvent.y;
 		symbol = nextEvent.symbol;
-		putNewResult = putNew(p_global,x, y,symbol);
 		console.log("Now let's try to add : "+eventToString(nextEvent));
+		putNewResult = putNew(p_global,x, y,symbol);
+		ok = (putNewResult != ERROR)
 		if (putNewResult == OK){
 			//(y,x) might be out of bounds, if so the putNewResult isn't supposed to be OK. Hence the check only here.
 			r = p_global.regionGrid[y][x]; 
@@ -105,63 +107,69 @@ function tryToPutNew(p_global,p_x,p_y,p_symbol){
 					eventsToAdd.push({x:x+ROUND_X_COORDINATES[i],y:y+ROUND_Y_COORDINATES[i],symbol:NO_STAR});
 				}
 				//Final alert on column : fill the missing spaces in the column 
-				/*if (p_global.notPlacedYet.columns[x].Os == 0){
+				if (p_global.notPlacedYet.columns[x].Os == 0){
 					for(yi=0;yi<global.length;yi++){
 						//there may be stars already, hence the (if UNDECIDED) guard
 						if (p_global.answerGrid[yi][x] == UNDECIDED){
 							eventsToAdd.push({x:x,y:yi,symbol:NO_STAR});
+							console.log("Event pushed : "+eventToString({x:x,y:yi,symbol:NO_STAR}));
 						}
 					}
-				}*/
+				}
 				//Final alert on row
-				/*if (p_global.notPlacedYet.rows[y].Os == 0){
+				if (p_global.notPlacedYet.rows[y].Os == 0){
 					for(xi=0;xi<global.length;xi++){
 						if (p_global.answerGrid[y][xi] == UNDECIDED){
 							eventsToAdd.push({x:xi,y:y,symbol:NO_STAR});
+							console.log("Event pushed : "+eventToString({x:xi,y:y,symbol:NO_STAR}));
 						}
 					}
-				}*/
+				}
 				//Final alert on region
-				/*if (p_global.notPlacedYet.regions[r].Os == 0){
+				if (p_global.notPlacedYet.regions[r].Os == 0){
 					var spaceInRegion;
 					var i;
 					for(i=0;i< p_global.spacesByRegion[r].length;i++){
 						spaceInRegion = p_global.spacesByRegion[r][i];
 						if (p_global.answerGrid[spaceInRegion.y][spaceInRegion.x] == UNDECIDED){
 							eventsToAdd.push({x:spaceInRegion.x,y:spaceInRegion.y,symbol:NO_STAR});
+							console.log("Event pushed : "+eventToString({x:spaceInRegion.x,y:spaceInRegion.y,symbol:NO_STAR}));
 						}
 					}
-				}*/
+				}
 			}
 			if (symbol == NO_STAR){
 				//Final alert on column : fill the missing spaces in the column 
-				/*if (p_global.notPlacedYet.columns[x].Xs == 0){
+				if (p_global.notPlacedYet.columns[x].Xs == 0){
 					for(yi=0;yi<global.length;yi++){
 						//there may be stars already, hence the (if UNDECIDED) guard
 						if (p_global.answerGrid[yi][x] == UNDECIDED){
 							eventsToAdd.push({x:x,y:yi,symbol:STAR});
+							console.log("Event pushed : "+eventToString({x:x,y:yi,symbol:STAR}));
 						}
 					}
-				}*/
+				}
 				//Final alert on row
-				/*if (p_global.notPlacedYet.rows[y].Xs == 0){
+				if (p_global.notPlacedYet.rows[y].Xs == 0){
 					for(xi=0;xi<global.length;xi++){
 						if (p_global.answerGrid[y][xi] == UNDECIDED){
 							eventsToAdd.push({x:xi,y:y,symbol:STAR});
+							console.log("Event pushed : "+eventToString({x:xi,y:y,symbol:STAR}));
 						}
 					}
-				}*/
+				}
 				//Final alert on region
-				/*if (p_global.notPlacedYet.regions[r].Xs == 0){
+				if (p_global.notPlacedYet.regions[r].Xs == 0){
 					var spaceInRegion;
 					var i;
 					for(i=0;i< p_global.spacesByRegion[r].length;i++){
 						spaceInRegion = p_global.spacesByRegion[r][i];
 						if (p_global.answerGrid[spaceInRegion.y][spaceInRegion.x] == UNDECIDED){
 							eventsToAdd.push({x:spaceInRegion.x,y:spaceInRegion.y,symbol:STAR});
+							console.log("Event pushed : "+eventToString({x:spaceInRegion.x,y:spaceInRegion.y,symbol:STAR}));
 						}
 					}
-				}*/
+				}
 			}
 			eventsAdded.push(nextEvent);
 		} // if OK
@@ -173,17 +181,20 @@ function tryToPutNew(p_global,p_x,p_y,p_symbol){
 			nextEvent = eventsAdded.pop();
 			remove(p_global,nextEvent.x,nextEvent.y);
 		}
-	}
+	} 
 	
 	//PARTIE LOG
-	var row="";
+	else{
+		console.log("Yes !-----------------");
+	}
+	/*var row="";
 	for(yi=0;yi<global.length;yi++){
 		row = "";
 		for(xi=0;xi<global.length;xi++){
 			row+=p_global.answerGrid[yi][xi];
 		}
 		console.log(row);
-	}
+	}*/
 }
 
 function eventToString(p_event){
