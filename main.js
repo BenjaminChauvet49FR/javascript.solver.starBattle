@@ -11,6 +11,11 @@ var colors={
 	open_wall:'#dddddd',
 	edge_walls:'#000000',
 	bannedSpace:'#666666',
+	//star:'#ffe101', TODO
+	cross:'#000000',
+	starIndication:"#00cccc",
+	crossIndication:"#cc0000",
+	regionIndication:"#008800",
 	rainbowSpaces:[]
 }
 
@@ -20,12 +25,14 @@ function drawCanvas(){
 	drawGridUltimate(context,pix,colors,global);
 	drawAroundIndications(context,pix,colors,global);
 	drawInsideIndications(context,pix,colors,global);
-	drawSpaces(context,pix,global);
+	drawSpaces(context,pix,colors,global);
 }
 
 //--------------------
 
 setInterval(drawCanvas,30);
 var fieldName = document.getElementById("input_grid_name");
-document.getElementById("submit_load_grid").addEventListener('click',function(event){loadAction(canevas,pix,global,fieldName.value)});
+document.getElementById("submit_load_grid").addEventListener('click',
+	function(event){loadAction(canevas,pix,global,fieldName.value)}
+);
 canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,global)},false);

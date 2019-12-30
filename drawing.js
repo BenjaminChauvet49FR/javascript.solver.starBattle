@@ -12,16 +12,10 @@ function drawAroundIndications(p_context,p_pix,p_colorDigits,p_global){
 	var pixYDown = p_pix.marginGrid.up+p_pix.sideSpace*p_global.yLength+pixFont;
 	p_context.font = "30px Arial";
 	for(var i=0;i<p_global.xLength;i++){
-		/*p_context.fillStyle = "#00cccc"; //TODO perform color management
-		p_context.fillText(p_global.notPlacedYet.columns[i].Os,pixXUpAndDown,pixYUp);
-		p_context.fillText(p_global.notPlacedYet.rows[i].Os,pixXLeft,pixYLeftAndRight);
-		p_context.fillStyle = "#cc0000";
-		p_context.fillText(p_global.notPlacedYet.rows[i].Xs,pixXRight,pixYLeftAndRight);
-		p_context.fillText(p_global.notPlacedYet.columns[i].Xs,pixXUpAndDown,pixYDown);*/
-		p_context.fillStyle = "#00cccc"; //TODO perform color management
+		p_context.fillStyle = p_colorDigits.starIndication; //TODO perform color management
 		p_context.fillText(p_global.getOsRemainColumn(i),pixXUpAndDown,pixYUp);
 		p_context.fillText(p_global.getOsRemainRow(i),pixXLeft,pixYLeftAndRight);
-		p_context.fillStyle = "#cc0000";
+		p_context.fillStyle = p_colorDigits.crossIndication;
 		p_context.fillText(p_global.getXsRemainRow(i),pixXRight,pixYLeftAndRight);
 		p_context.fillText(p_global.getXsRemainColumn(i),pixXUpAndDown,pixYDown);
 		pixXUpAndDown += p_pix.sideSpace;
@@ -35,7 +29,7 @@ Draws the region indications within a space in each.
 function drawInsideIndications(p_context,p_pix,p_colorDigits,p_global){
 	const fontSize = p_pix.sideSpace/3;
 	p_context.font = fontSize+"px Arial";
-	p_context.fillStyle = "#008800";
+	p_context.fillStyle = p_colorDigits.regionIndication;
 	var indexXFirstRegionSpace,indexYFirstRegionSpace;
 	var pixLeft,pixUp;
 	var textToWrite;
@@ -50,10 +44,10 @@ function drawInsideIndications(p_context,p_pix,p_colorDigits,p_global){
 	
 }
 
-function drawSpaces(p_context,p_pix,p_global){
+function drawSpaces(p_context,p_pix,p_color,p_global){
 	const fontSize = p_pix.sideSpace;
 	p_context.font = fontSize+"px Arial";
-	p_context.fillStyle = "#000000";
+	p_context.fillStyle = p_color.cross;
 	const pixStartX = p_pix.marginGrid.left+p_pix.borderSpace;  
 	var pixDrawX = pixStartX;	
 	var pixDrawY = p_pix.marginGrid.up+p_pix.sideSpace-p_pix.borderSpace;
