@@ -22,7 +22,7 @@ loadAction = function(p_canvas,p_pix,p_global,p_name,p_starNumber){
 	var grid = stringToWallGrid(localStorage.getItem("grid_is_good_"+p_name));
 	p_global.loadGrid(grid);
 	// fin de l'améliorable du TODO
-	p_global.loadAnswerGrid(2);
+	p_global.loadAnswerGrid(p_starNumber);
 	adaptCanvas(p_canvas,p_pix,p_global);
 }
 

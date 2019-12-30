@@ -32,7 +32,8 @@ function drawCanvas(){
 
 setInterval(drawCanvas,30);
 var fieldName = document.getElementById("input_grid_name");
+var fieldStars = document.getElementById("input_number_stars");
 document.getElementById("submit_load_grid").addEventListener('click',
-	function(event){loadAction(canevas,pix,global,fieldName.value)}
+	function(event){loadAction(canevas,pix,global,fieldName.value,fieldStars.value)}
 );
 canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,global)},false);
