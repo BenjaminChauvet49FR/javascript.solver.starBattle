@@ -168,6 +168,13 @@ GlobalStarBattle.prototype.remove = function(p_x,p_y){
 
 */
 GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
+	
+	if (this.answerGrid[p_y][p_x] != UNDECIDED){
+		console.log("Warning ! Trying to put "+p_symbol+" at "+p_x+","+p_y+" which is already taken by "+this.answerGrid[p_y][p_x]);
+		//TODO on peut faire un avertissement mieux que ça ? 
+		return;
+	}
+	
 	var eventsToAdd = [{x:p_x,y:p_y,symbol:p_symbol}];
 	var eventsAdded = [];
 	var ok = true;
