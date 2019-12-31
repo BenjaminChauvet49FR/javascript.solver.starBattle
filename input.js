@@ -13,8 +13,8 @@ function clickCanvas(event,p_canvas,p_pix,p_global,p_symbol) {
 	}
 }
 
+//--------------------------
 
-//TODO : parameters in all functions
 /** 
 Loads a walled grid from local storage AND creates a region grid 
 */
@@ -32,10 +32,8 @@ submitSymbolAction = function(p_documentElement){
 	p_documentElement.value = NO_STAR; 
 }
 
-//--------------------------
-
-//TODO : copié-collé d'une version de grid_is_good, je suis sûr que c'est améliorable
+//TODO : passer le travail à pix
 function adaptCanvas(p_canvas, p_pix,p_global){
-	p_canvas.width = p_global.xLength*p_pix.sideSpace+p_pix.marginGrid.left+p_pix.marginGrid.right;
-	p_canvas.height = p_global.yLength*p_pix.sideSpace+p_pix.marginGrid.up+p_pix.marginGrid.down;
+	p_canvas.width = p_global.length*p_pix.sideSpace+p_pix.marginGrid.left+p_pix.marginGrid.right;
+	p_canvas.height = p_global.length*p_pix.sideSpace+p_pix.marginGrid.up+p_pix.marginGrid.down;
 }

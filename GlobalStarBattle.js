@@ -1,3 +1,5 @@
+//TODO rassembler les termes de l'objet parce que ça devient important.
+
 function GlobalStarBattle(p_wallGrid,p_starNumber){
 	Global.call(this,1,1);
 	this.loadGrid(p_wallGrid);
@@ -8,13 +10,14 @@ GlobalStarBattle.prototype = new Global(1,1);
 GlobalStarBattle.prototype.constructor = GlobalStarBattle;
 // Credits : https://www.tutorialsteacher.com/javascript/inheritance-in-javascript
 
-
+//TODO Mettre en avant le fait que cette fonction est méga importante.
 GlobalStarBattle.prototype.loadAnswerGrid = function(p_starNumber){
 	this.length = this.wallGrid.length;
 	this.listSpacesByRegion(); //spacesByRegion
 	this.buildPossibilities(p_starNumber); //notPlacedYet
 	this.buildAnswerGrid(); //answerGrid
-	this.purifyAnswerGrid();
+	this.purifyAnswerGrid(); 
+	this.happenedEvents = [];
 }
 
 /**
@@ -264,11 +267,27 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 		}
 	} 
 	
-	//PARTIE LOG
 	else{
-		console.log("Yes !-----------------");
+		console.log("Yes !-----------------"); //TODO Vivement l'existence du canvas d'events quand même...
+		this.happenedEvents.push({x:eventsAdded[0].x,y:eventsAdded[0].y,symbol:eventsAdded[0].symbol,cause:ASSUMED});
+		for(var i=1;i<eventsAdded.length;i++){
+			this.happenedEvents.push({x:eventsAdded[i].x,y:eventsAdded[i].y,symbol:eventsAdded[i].symbol,cause:FORCED});
+		}
 	}
 }
+
+GlobalStarBattle.prototype.massCancel = function(){
+	var eventToCancel;
+	if (this.happenedEvents.length == 0)
+		return;
+	do{
+		eventToCancel = this.happenedEvents.pop();
+		this.remove(eventToCancel.x,eventToCancel.y);	
+	}while(eventToCancel.cause != ASSUMED);
+}
+
+//--------------
+// It's "to string" time !
 
 function eventToString(p_event){
 	return ("["+p_event.x+","+p_event.y+"] ("+p_event.symbol+")");
