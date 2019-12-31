@@ -63,3 +63,4 @@ function drawSpaces(p_context,p_pix,p_color,p_global){
 		pixDrawX = pixStartX;
 	}
 }
+

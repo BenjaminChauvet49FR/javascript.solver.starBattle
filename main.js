@@ -33,7 +33,9 @@ function drawCanvas(){
 setInterval(drawCanvas,30);
 var fieldName = document.getElementById("input_grid_name");
 var fieldStars = document.getElementById("input_number_stars");
+var submitSymbolType = document.getElementById("submit_change_sign");
+submitSymbolType.addEventListener('click', function(event){submitSymbolAction(submitSymbolType)});
 document.getElementById("submit_load_grid").addEventListener('click',
 	function(event){loadAction(canevas,pix,global,fieldName.value,fieldStars.value)}
 );
-canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,global)},false);
+canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,global,submitSymbolType.value)},false);
