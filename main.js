@@ -41,5 +41,5 @@ document.getElementById("submit_load_grid").addEventListener('click',
 );
 canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,global,submitSymbolType.value)},false);
 document.getElementById("submit_cancel").addEventListener('click',
-	function(event){global.massCancel();}
+	function(event){global.massUndo();}
 );

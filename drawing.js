@@ -11,7 +11,7 @@ function drawAroundIndications(p_context,p_pix,p_colorDigits,p_global){
 	var pixYUp = pixFont;
 	var pixYDown = p_pix.marginGrid.up+p_pix.sideSpace*p_global.yLength+pixFont;
 	p_context.font = "30px Arial";
-	for(var i=0;i<p_global.xLength;i++){
+	for(var i=0;i<p_global.xyLength;i++){
 		p_context.fillStyle = p_colorDigits.starIndication; //TODO perform color management
 		p_context.fillText(p_global.getOsRemainColumn(i),pixXUpAndDown,pixYUp);
 		p_context.fillText(p_global.getOsRemainRow(i),pixXLeft,pixYLeftAndRight);
@@ -34,7 +34,7 @@ function drawInsideIndications(p_context,p_pix,p_colorDigits,p_global){
 	var pixLeft,pixUp;
 	var textToWrite;
 	var firstRegionSpace;
-	for(var i=0;i<p_global.xLength;i++){
+	for(var i=0;i<p_global.xyLength;i++){
 		firstRegionSpace = p_global.getFirstSpaceRegion(i);
 		pixLeft = p_pix.marginGrid.left+p_pix.sideSpace*firstRegionSpace.x+p_pix.borderSpace+1;//TODO renommer ces variables
 		pixDown = p_pix.marginGrid.up+p_pix.sideSpace*firstRegionSpace.y+fontSize;
@@ -52,8 +52,8 @@ function drawSpaces(p_context,p_pix,p_color,p_global){
 	var pixDrawX = pixStartX;	
 	var pixDrawY = p_pix.marginGrid.up+p_pix.sideSpace-p_pix.borderSpace;
 	var ix,iy;
-	for(iy = 0;iy < p_global.length;iy++){
-		for(ix = 0;ix < p_global.length;ix++){
+	for(iy = 0;iy < p_global.xyLength;iy++){
+		for(ix = 0;ix < p_global.xyLength;ix++){
 			if ((p_global.getAnswer(ix,iy) != UNDECIDED) && (p_global.getRegion(ix,iy) != BANNED)){
 				p_context.fillText(p_global.getAnswer(ix,iy),pixDrawX,pixDrawY);	
 			}

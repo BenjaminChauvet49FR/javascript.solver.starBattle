@@ -7,7 +7,7 @@ function clickCanvas(event,p_canvas,p_pix,p_global,p_symbol) {
     var pixMouseYInGrid = event.clientY - p_pix.marginGrid.up - rect.top;
 	var spaceIndexX = Math.floor(pixMouseXInGrid/p_pix.sideSpace); //index of the space, calculated from the (x,y) position
 	var spaceIndexY = Math.floor(pixMouseYInGrid/p_pix.sideSpace); //same - TODO maybe this should go to the Pix item ?
-    if ((spaceIndexX >= 0) && (spaceIndexY >= 0) && (spaceIndexY < global.length) && (spaceIndexX < global.length)){
+    if ((spaceIndexX >= 0) && (spaceIndexY >= 0) && (spaceIndexY < global.xyLength) && (spaceIndexX < global.xyLength)){
 		console.log("Try to put new : "+spaceIndexX+" "+spaceIndexY+" "+p_symbol);
 		p_global.tryToPutNew(spaceIndexX,spaceIndexY,p_symbol);
 	}
@@ -16,12 +16,13 @@ function clickCanvas(event,p_canvas,p_pix,p_global,p_symbol) {
 //--------------------------
 
 /** 
-Loads a walled grid from local storage AND creates a region grid 
+Loads a walled grid from local storage and its region grid (cf. super-function), updates intelligence, updates canvas
+TODO doc
 */
 loadAction = function(p_canvas,p_pix,p_global,p_name,p_starNumber){
 	var grid = stringToWallGrid(localStorage.getItem("grid_is_good_"+p_name));
 	p_global.loadGrid(grid);
-	p_global.loadAnswerGrid(p_starNumber);
+	p_global.loadIntelligence(p_starNumber);
 	adaptCanvas(p_canvas,p_pix,p_global);
 }
 
@@ -34,6 +35,6 @@ submitSymbolAction = function(p_documentElement){
 
 //TODO : passer le travail à pix
 function adaptCanvas(p_canvas, p_pix,p_global){
-	p_canvas.width = p_global.length*p_pix.sideSpace+p_pix.marginGrid.left+p_pix.marginGrid.right;
-	p_canvas.height = p_global.length*p_pix.sideSpace+p_pix.marginGrid.up+p_pix.marginGrid.down;
+	p_canvas.width = p_global.xyLength*p_pix.sideSpace+p_pix.marginGrid.left+p_pix.marginGrid.right;
+	p_canvas.height = p_global.xyLength*p_pix.sideSpace+p_pix.marginGrid.up+p_pix.marginGrid.down;
 }
