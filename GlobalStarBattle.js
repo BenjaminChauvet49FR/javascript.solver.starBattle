@@ -337,3 +337,26 @@ function answerGridToString(p_grid){
 	}
 }
 
+/**
+Returns the events to the text
+p_onlyAssumed : true if only the assumed events should be written.
+*/
+GlobalStarBattle.prototype.happenedEventsToString = function(p_onlyAssumed){
+	var ei,li;
+	var answer = "";
+	if (p_onlyAssumed){
+		for(li=0;li<this.happenedEvents.length;li++){
+			answer+=this.happenedEvents[li][0].toString()+"\n";
+		}	
+	}
+	else{
+		var ei;
+		for(li=0;li<this.happenedEvents.length;li++){
+			for(ei=0;ei<this.happenedEvents[li].length;ei++){
+				answer+=this.happenedEvents[li][ei].toString()+"\n";
+			}
+			answer+="--------\n";
+		}
+	}
+	return answer;
+}

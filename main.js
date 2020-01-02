@@ -35,11 +35,10 @@ setInterval(drawCanvas,30);
 var fieldName = document.getElementById("input_grid_name");
 var fieldStars = document.getElementById("input_number_stars");
 var submitSymbolType = document.getElementById("submit_change_sign");
+var textArea = document.getElementById("textarea_happened");
 submitSymbolType.addEventListener('click', function(event){submitSymbolAction(submitSymbolType)});
 document.getElementById("submit_load_grid").addEventListener('click',
-	function(event){loadAction(canevas,pix,global,fieldName.value,fieldStars.value)}
+	function(event){loadAction(canevas,pix,textArea,global,fieldName.value,fieldStars.value)}
 );
-canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,global,submitSymbolType.value)},false);
-document.getElementById("submit_cancel").addEventListener('click',
-	function(event){global.massUndo();}
-);
+canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,textArea,global,submitSymbolType.value)},false);
+document.getElementById("submit_undo").addEventListener('click',function(event){undoAction(global,textArea)});

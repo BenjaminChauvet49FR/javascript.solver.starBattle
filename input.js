@@ -1,7 +1,7 @@
 /**
  When you click on the canvas
 */
-function clickCanvas(event,p_canvas,p_pix,p_global,p_symbol) {
+function clickCanvas(event,p_canvas,p_pix,p_textArea,p_global,p_symbol) {
     var rect = p_canvas.getBoundingClientRect();
     var pixMouseXInGrid = event.clientX - p_pix.marginGrid.left - rect.left;
     var pixMouseYInGrid = event.clientY - p_pix.marginGrid.up - rect.top;
@@ -10,6 +10,7 @@ function clickCanvas(event,p_canvas,p_pix,p_global,p_symbol) {
     if ((spaceIndexX >= 0) && (spaceIndexY >= 0) && (spaceIndexY < global.xyLength) && (spaceIndexX < global.xyLength)){
 		console.log("Try to put new : "+spaceIndexX+" "+spaceIndexY+" "+p_symbol);
 		p_global.tryToPutNew(spaceIndexX,spaceIndexY,p_symbol);
+		p_textArea.innerHTML = p_global.happenedEventsToString(false); //TODO manage true/false
 	}
 }
 
@@ -19,11 +20,12 @@ function clickCanvas(event,p_canvas,p_pix,p_global,p_symbol) {
 Loads a walled grid from local storage and its region grid (cf. super-function), updates intelligence, updates canvas
 TODO doc
 */
-loadAction = function(p_canvas,p_pix,p_global,p_name,p_starNumber){
+loadAction = function(p_canvas,p_pix,p_textArea,p_global,p_name,p_starNumber){
 	var grid = stringToWallGrid(localStorage.getItem("grid_is_good_"+p_name));
 	p_global.loadGrid(grid);
 	p_global.loadIntelligence(p_starNumber);
 	adaptCanvas(p_canvas,p_pix,p_global);
+	p_textArea.innerHTML = ""; //TODO manage true/false
 }
 
 submitSymbolAction = function(p_documentElement){
@@ -31,6 +33,11 @@ submitSymbolAction = function(p_documentElement){
 		p_documentElement.value = STAR; return;
 	}
 	p_documentElement.value = NO_STAR; 
+}
+
+undoAction = function(p_global,p_textArea){
+	p_global.massUndo();
+	p_textArea.innerHTML = p_global.happenedEventsToString(false); //TODO manage true/false
 }
 
 //TODO : passer le travail à pix
