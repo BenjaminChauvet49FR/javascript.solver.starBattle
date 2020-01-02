@@ -191,8 +191,7 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 	var putNewResult;
 	var spaceEventToApply;
 	var spaceEventToAdd;
-	var x,y,r,symbol,xi,yi,si,roundi;
-	var spaceInRegion;
+	var x,y,r,symbol,xi,yi,roundi;
 	while ((eventsToAdd.length > 0) && ok){ 
 		spaceEventToApply = eventsToAdd.pop();
 		x = spaceEventToApply.x;
@@ -209,7 +208,6 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 					spaceEventToAdd = new SpaceEvent(NO_STAR,x+ROUND_X_COORDINATES[roundi],y+ROUND_Y_COORDINATES[roundi]);
 					eventsToAdd.push(spaceEventToAdd);
 					console.log("Event pushed : "+spaceEventToAdd.toString());
-					/*eventsToAdd.push({x:x+ROUND_X_COORDINATES[roundi],y:y+ROUND_Y_COORDINATES[roundi],symbol:NO_STAR});*/
 				}
 				//Final alert on column : fill the missing spaces in the column 
 				if (this.notPlacedYet.columns[x].Os == 0){
@@ -219,8 +217,6 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 							spaceEventToAdd = new SpaceEvent(NO_STAR,x,yi);
 							eventsToAdd.push(spaceEventToAdd);
 							console.log("Event pushed : "+spaceEventToAdd.toString());
-							/*eventsToAdd.push({x:x,y:yi,symbol:NO_STAR});
-							console.log("Event pushed : "+eventToString({x:x,y:yi,symbol:NO_STAR}));*/
 						}
 					}
 				}
@@ -231,22 +227,18 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 							spaceEventToAdd = new SpaceEvent(NO_STAR,xi,y);
 							eventsToAdd.push(spaceEventToAdd);
 							console.log("Event pushed : "+spaceEventToAdd.toString());
-							/*eventsToAdd.push({x:xi,y:y,symbol:NO_STAR});
-							console.log("Event pushed : "+eventToString({x:xi,y:y,symbol:NO_STAR}));*/
 						}
 					}
 				}
 				//Final alert on region
 				if (this.notPlacedYet.regions[r].Os == 0){
 					var spaceInRegion;
-					for(si=0;si< this.spacesByRegion[r].length;si++){
+					for(var si=0;si< this.spacesByRegion[r].length;si++){
 						spaceInRegion = this.spacesByRegion[r][si];
 						if (this.answerGrid[spaceInRegion.y][spaceInRegion.x] == UNDECIDED){
 							spaceEventToAdd = new SpaceEvent(NO_STAR,spaceInRegion.x,spaceInRegion.y);
 							eventsToAdd.push(spaceEventToAdd);
 							console.log("Event pushed : "+spaceEventToAdd.toString());
-							/*eventsToAdd.push({x:spaceInRegion.x,y:spaceInRegion.y,symbol:NO_STAR});
-							console.log("Event pushed : "+eventToString({x:spaceInRegion.x,y:spaceInRegion.y,symbol:NO_STAR}));*/
 						}
 					}
 				}
@@ -260,8 +252,6 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 							spaceEventToAdd = new SpaceEvent(STAR,x,yi);
 							eventsToAdd.push(spaceEventToAdd);
 							console.log("Event pushed : "+spaceEventToAdd.toString());
-							/*eventsToAdd.push({x:x,y:yi,symbol:STAR});
-							console.log("Event pushed : "+eventToString({x:x,y:yi,symbol:STAR}));*/
 						}
 					}
 				}
@@ -272,21 +262,18 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 							spaceEventToAdd = new SpaceEvent(STAR,xi,y);
 							eventsToAdd.push(spaceEventToAdd);
 							console.log("Event pushed : "+spaceEventToAdd.toString());
-							/*eventsToAdd.push({x:xi,y:y,symbol:STAR});
-							console.log("Event pushed : "+eventToString({x:xi,y:y,symbol:STAR}));*/
 						}
 					}
 				}
 				//Final alert on region
 				if (this.notPlacedYet.regions[r].Xs == 0){
-					for(si=0;si< this.spacesByRegion[r].length;si++){
+					var spaceInRegion;
+					for(var si=0;si< this.spacesByRegion[r].length;si++){
 						spaceInRegion = this.spacesByRegion[r][si];
 						if (this.answerGrid[spaceInRegion.y][spaceInRegion.x] == UNDECIDED){
 							spaceEventToAdd = new SpaceEvent(STAR,spaceInRegion.x,spaceInRegion.y);
 							eventsToAdd.push(spaceEventToAdd);
 							console.log("Event pushed : "+spaceEventToAdd.toString());
-							/*eventsToAdd.push({x:spaceInRegion.x,y:spaceInRegion.y,symbol:STAR});
-							console.log("Event pushed : "+eventToString({x:spaceInRegion.x,y:spaceInRegion.y,symbol:STAR}));*/
 						}
 					}
 				}
@@ -345,18 +332,17 @@ GlobalStarBattle.prototype.happenedEventsToString = function(p_onlyAssumed){
 	var ei,li;
 	var answer = "";
 	if (p_onlyAssumed){
-		for(li=0;li<this.happenedEvents.length;li++){
-			answer+=this.happenedEvents[li][0].toString()+"\n";
-		}	
+		this.happenedEvents.forEach(function(eventList){
+			answer+=eventList[0].toString()+"\n";
+		});
 	}
 	else{
-		var ei;
-		for(li=0;li<this.happenedEvents.length;li++){
-			for(ei=0;ei<this.happenedEvents[li].length;ei++){
-				answer+=this.happenedEvents[li][ei].toString()+"\n";
-			}
+		this.happenedEvents.forEach(function(eventList){
+			eventList.forEach(function(spaceEvent){
+				answer+=spaceEvent.toString()+"\n" 
+			});
 			answer+="--------\n";
-		}
+		});
 	}
 	return answer;
 }
