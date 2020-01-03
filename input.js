@@ -1,18 +1,43 @@
 /**
  When you click on the canvas
 */
-function clickCanvas(event,p_canvas,p_pix,p_textArea,p_global,p_symbol) {
+function clickCanvas(event,p_canvas,p_pix,p_textArea,p_global,p_actionId) { //TODO rename this action ? Yeah, but what about loadAction ?
     var rect = p_canvas.getBoundingClientRect();
     var pixMouseXInGrid = event.clientX - p_pix.marginGrid.left - rect.left;
     var pixMouseYInGrid = event.clientY - p_pix.marginGrid.up - rect.top;
 	var spaceIndexX = Math.floor(pixMouseXInGrid/p_pix.sideSpace); //index of the space, calculated from the (x,y) position
 	var spaceIndexY = Math.floor(pixMouseYInGrid/p_pix.sideSpace); //same - TODO maybe this should go to the Pix item ?
     if ((spaceIndexX >= 0) && (spaceIndexY >= 0) && (spaceIndexY < global.xyLength) && (spaceIndexX < global.xyLength)){
-		console.log("Try to put new : "+spaceIndexX+" "+spaceIndexY+" "+p_symbol);
-		p_global.tryToPutNew(spaceIndexX,spaceIndexY,p_symbol);
+		clickSpaceAction(p_global,spaceIndexX,spaceIndexY,p_actionId);
 		p_textArea.innerHTML = p_global.happenedEventsToString(false); //TODO manage true/false
 	}
 }
+
+/**
+You successfully clicked on a region space (coordinates in parameter). Then what ? 
+*/
+function clickSpaceAction(p_global,p_spaceIndexX,p_spaceIndexY,p_actionId){
+	switch(p_actionId){
+		case ACTION_PUT_STAR.id:
+			console.log("HYPOTHESIS : "+p_spaceIndexX+" "+p_spaceIndexY+" "+STAR);
+			p_global.emitHypothesis(p_spaceIndexX,p_spaceIndexY,STAR); 
+		break;
+		case ACTION_PUT_NO_STAR.id:
+			console.log("HYPOTHESIS : "+p_spaceIndexX+" "+p_spaceIndexY+" "+NO_STAR);
+			p_global.emitHypothesis(p_spaceIndexX,p_spaceIndexY,NO_STAR); 
+		break;		
+		case ACTION_PASS_ROW.id:
+			p_global.passRow(p_global.getRow(p_spaceIndexX,p_spaceIndexY));
+		break;
+		case ACTION_PASS_COLUMN.id:
+			p_global.passColumn(p_global.getColumn(p_spaceIndexX,p_spaceIndexY));
+		break;
+		case ACTION_PASS_REGION.id:
+			p_global.passRegion(p_global.getRegion(p_spaceIndexX,p_spaceIndexY));
+		break;
+	}
+}
+
 
 //--------------------------
 
@@ -26,13 +51,6 @@ loadAction = function(p_canvas,p_pix,p_textArea,p_global,p_name,p_starNumber){
 	p_global.loadIntelligence(p_starNumber);
 	adaptCanvas(p_canvas,p_pix,p_global);
 	p_textArea.innerHTML = ""; //TODO manage true/false
-}
-
-submitSymbolAction = function(p_documentElement){
-	if (p_documentElement.value != STAR){
-		p_documentElement.value = STAR; return;
-	}
-	p_documentElement.value = NO_STAR; 
 }
 
 undoAction = function(p_global,p_textArea){

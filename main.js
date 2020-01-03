@@ -5,7 +5,7 @@ var global = new GlobalStarBattle(generateWallGrid(1,1),1);
 var canevasInteraction = document.getElementById("canevas");
 var	context = canevasInteraction.getContext("2d");
 //var canevasListActions = document.getElementById("canevas_list_actions"); TODO
-
+var actionToDo;
 
 var colors={
 	closed_wall:'#222222',
@@ -34,11 +34,40 @@ function drawCanvas(){
 setInterval(drawCanvas,30);
 var fieldName = document.getElementById("input_grid_name");
 var fieldStars = document.getElementById("input_number_stars");
-var submitSymbolType = document.getElementById("submit_change_sign");
 var textArea = document.getElementById("textarea_happened");
-submitSymbolType.addEventListener('click', function(event){submitSymbolAction(submitSymbolType)});
+
 document.getElementById("submit_load_grid").addEventListener('click',
 	function(event){loadAction(canevas,pix,textArea,global,fieldName.value,fieldStars.value)}
 );
-canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,textArea,global,submitSymbolType.value)},false);
+canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,textArea,global,actionToDo)},false);
 document.getElementById("submit_undo").addEventListener('click',function(event){undoAction(global,textArea)});
+
+//Submits of click on a grid : what will happen ? (TODO : the word action is pretty generic)
+var submitPutStar = document.getElementById("submit_put_star");
+var submitPutX = document.getElementById("submit_put_X");
+var submitPassRegion = document.getElementById("submit_pass_region");
+var submitPassRow = document.getElementById("submit_pass_row");
+var submitPassColumn = document.getElementById("submit_pass_column");
+
+var textAction = document.getElementById("text_canvas_action");
+textAction.innerHTML = ACTION_PUT_STAR.caption;
+actionToDo = ACTION_PUT_STAR.id;
+addEventListenerAndCaptionActionSubmit(submitPutStar,ACTION_PUT_STAR);
+addEventListenerAndCaptionActionSubmit(submitPutX,ACTION_PUT_NO_STAR);
+addEventListenerAndCaptionActionSubmit(submitPassRegion,ACTION_PASS_REGION);
+addEventListenerAndCaptionActionSubmit(submitPassRow,ACTION_PASS_ROW);
+addEventListenerAndCaptionActionSubmit(submitPassColumn,ACTION_PASS_COLUMN);
+
+//TODO the word "action" is pretty generic
+
+/**
+Adds the event listener of an action submit by linking it to an action for the canvas (warning : changes a text element
+*/
+function addEventListenerAndCaptionActionSubmit(p_submitElement,p_action){
+	p_submitElement.value = p_action.caption;
+	p_submitElement.addEventListener('click',function(event){
+		textAction.innerHTML = p_action.caption;
+		actionToDo = p_action.id;
+	});
+}
+

@@ -101,6 +101,7 @@ GlobalStarBattle.prototype.buildPossibilities = function(p_numberStarsPer){
 }
 
 //----------------------
+//Getters (not setters, though)
 
 GlobalStarBattle.prototype.getAnswer = function(p_x,p_y){
 	return this.answerGrid[p_y][p_x];
@@ -114,7 +115,33 @@ GlobalStarBattle.prototype.getXsRemainColumn = function(p_i){return this.notPlac
 GlobalStarBattle.prototype.getXsRemainRegion = function(p_i){return this.notPlacedYet.regions[p_i].Xs;}
 GlobalStarBattle.prototype.getFirstSpaceRegion = function(p_i){return this.spacesByRegion[p_i][0];}
 
-//----------------------
+//------------------
+//Strategy management
+/**
+Admits that a star OR a no-star could be in this space...
+*/
+GlobalStarBattle.prototype.emitHypothesis = function(p_x,p_y,p_symbol){
+	var result = this.tryToPutNew(p_x,p_y,p_symbol);
+	if (result != null && result.eventsApplied.length > 0){
+		this.happenedEvents.push(result.eventsApplied);
+	}
+}
+
+GlobalStarBattle.prototype.passRegion = function(p_number){
+	alert("TODO : la région "+p_number+" va être passée !");
+}
+
+GlobalStarBattle.prototype.passRow = function(p_number){
+	alert("TODO : la ligne "+p_number+" va être passée !");
+}
+
+GlobalStarBattle.prototype.passColumn = function(p_number){
+	alert("TODO : la colonne "+p_number+" va être passée !");
+}
+
+
+//------------------
+//Putting symbols into spaces. 
 
 /**Tries to put a symbol into the space of a grid. 3 possibilities :
 OK : it was indeed put into the grid ; the number of Os and Xs for this region, row and column are also updated.
@@ -153,7 +180,7 @@ GlobalStarBattle.prototype.putNew = function(p_x,p_y,p_symbol){
 }
 
 /**
-Well, we did something wrong so... let's remove it, right ?
+Well, we guessed something wrong so... let's remove the symbol ! 
 */
 GlobalStarBattle.prototype.remove = function(p_x,p_y){
 	var indexRegion = this.regionGrid[p_y][p_x];
@@ -173,6 +200,7 @@ GlobalStarBattle.prototype.remove = function(p_x,p_y){
 
 }
 
+
 /**
 
 */
@@ -180,11 +208,11 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 	
 	if (this.answerGrid[p_y][p_x] != UNDECIDED){
 		console.log("Warning ! Trying to put "+p_symbol+" at "+p_x+","+p_y+" ; there is already "+this.answerGrid[p_y][p_x]+" in this place !");
-		return;
+		return null;
 	}
 	
 	var eventsToAdd = [new SpaceEvent(p_symbol,p_x,p_y)];
-	var eventsAdded = [];
+	var eventsApplied = [];
 	var ok = true;
 	var putNewResult;
 	var spaceEventToApply;
@@ -276,23 +304,24 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 					}
 				}
 			}
-			eventsAdded.push(spaceEventToApply);
+			eventsApplied.push(spaceEventToApply);
 		} // if OK
 	}
 	
 	//Mistakes were made, we should undo everything 
 	if (!ok){
 		var spaceEventToUndo
-		while(eventsAdded.length > 0){
-			spaceEventToUndo = eventsAdded.pop();
+		while(eventsApplied.length > 0){
+			spaceEventToUndo = eventsApplied.pop();
 			this.remove(spaceEventToUndo.x,spaceEventToUndo.y);
 		}
 	} 
 	
+	//Actually it's fine !
 	else{
 		console.log("Yes !-----------------"); 
-		this.happenedEvents.push(eventsAdded) 
 	}
+	return {eventsApplied:eventsApplied};
 }
 
 /**
