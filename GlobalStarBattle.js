@@ -112,7 +112,6 @@ GlobalStarBattle.prototype.getOsRemainRegion = function(p_i){return this.notPlac
 GlobalStarBattle.prototype.getXsRemainRow = function(p_i){return this.notPlacedYet.rows[p_i].Xs;}
 GlobalStarBattle.prototype.getXsRemainColumn = function(p_i){return this.notPlacedYet.columns[p_i].Xs;}
 GlobalStarBattle.prototype.getXsRemainRegion = function(p_i){return this.notPlacedYet.regions[p_i].Xs;}
-
 GlobalStarBattle.prototype.getFirstSpaceRegion = function(p_i){return this.spacesByRegion[p_i][0];}
 
 //----------------------
@@ -180,8 +179,7 @@ GlobalStarBattle.prototype.remove = function(p_x,p_y){
 GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 	
 	if (this.answerGrid[p_y][p_x] != UNDECIDED){
-		console.log("Warning ! Trying to put "+p_symbol+" at "+p_x+","+p_y+" which is already taken by "+this.answerGrid[p_y][p_x]);
-		//TODO on peut faire un avertissement mieux que ça ? 
+		console.log("Warning ! Trying to put "+p_symbol+" at "+p_x+","+p_y+" ; there is already "+this.answerGrid[p_y][p_x]+" in this place !");
 		return;
 	}
 	
@@ -292,7 +290,7 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 	} 
 	
 	else{
-		console.log("Yes !-----------------"); //TODO Vivement l'existence du canvas d'events quand même...
+		console.log("Yes !-----------------"); 
 		this.happenedEvents.push(eventsAdded) 
 	}
 }
