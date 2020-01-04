@@ -27,10 +27,10 @@ function clickSpaceAction(p_global,p_spaceIndexX,p_spaceIndexY,p_actionId){
 			p_global.emitHypothesis(p_spaceIndexX,p_spaceIndexY,NO_STAR); 
 		break;		
 		case ACTION_PASS_ROW.id:
-			p_global.passRow(p_global.getRow(p_spaceIndexX,p_spaceIndexY));
+			p_global.passRow(p_spaceIndexY);
 		break;
 		case ACTION_PASS_COLUMN.id:
-			p_global.passColumn(p_global.getColumn(p_spaceIndexX,p_spaceIndexY));
+			p_global.passColumn(p_spaceIndexX);
 		break;
 		case ACTION_PASS_REGION.id:
 			p_global.passRegion(p_global.getRegion(p_spaceIndexX,p_spaceIndexY));
