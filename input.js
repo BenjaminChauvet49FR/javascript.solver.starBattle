@@ -38,6 +38,15 @@ function clickSpaceAction(p_global,p_spaceIndexX,p_spaceIndexY,p_actionId){
 	}
 }
 
+//--------------------------
+/**
+Tries to pass everything : rows, regions, columns.
+*/
+multiPassAction = function (p_global,p_textArea){
+	p_global.multiPass();
+	p_textArea.innerHTML = p_global.happenedEventsToString(false); //TODO manage true/false
+	//TODO also manage the rewriting of the events.
+}
 
 //--------------------------
 

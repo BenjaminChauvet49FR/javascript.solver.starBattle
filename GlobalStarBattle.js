@@ -157,7 +157,7 @@ GlobalStarBattle.prototype.passRegion = function(p_indexRegion){
 		spacesToTestArray : spacesToTestArray,
 		family : {kind:FAMILY.REGION,index:p_indexRegion}
 	};
-	this.goForThePass();
+	return this.goForThePass();
 }
 
 /**
@@ -177,7 +177,7 @@ GlobalStarBattle.prototype.passRow = function(p_indexRow){
 		spacesToTestArray : spacesToTestArray,
 		family : {kind:FAMILY.ROW,index:p_indexRow}
 	};
-	this.goForThePass();
+	return this.goForThePass();
 }
 
 /**
@@ -197,7 +197,7 @@ GlobalStarBattle.prototype.passColumn = function(p_indexColumn){
 		spacesToTestArray : spacesToTestArray,
 		family : {kind:FAMILY.COLUMN,index:p_indexColumn}
 	};
-	this.goForThePass();
+	return this.goForThePass();
 }
 
 /**
@@ -208,7 +208,7 @@ GlobalStarBattle.prototype.goForThePass = function(){
 	
 	if (this.pass.spacesToTestArray.length == 0){
 		debugHumanMisclick("Doing a pass on a region/row/column that is already finished !");
-		return;
+		return {result:HARMLESS};
 	}
 	
 	this.tryToFillThatSpace(0,[]);
@@ -230,10 +230,11 @@ GlobalStarBattle.prototype.goForThePass = function(){
 		else{
 			debugPass("Unfortunately, this pass lead to nothing");
 		}
+		return {result:OK, numberNewEvents:this.pass.certitudes.length};
 	}
 	else{
-		//TODO : We did something wroooong !
-		alert("This pass allowed us to see that something went WRONG !");
+		alertPass("This pass allowed us to see that something went WRONG !");
+		return {result:ERROR};
 	}
 }
 
@@ -322,6 +323,56 @@ GlobalStarBattle.prototype.updateCertitudes = function(p_eventsApplied){
 	}
 }
 
+//------------------
+//Multipass strategy
+
+/**
+Passes all regions/rows/columns in the order of size until no deduction can be done anymore.
+Warning : if something wrong is found, everything will be deleted until the new pass ! (TODO : this behavior seems like it can be changed)
+*/
+GlobalStarBattle.prototype.multiPass = function(){
+	var anyModification = false;
+	var ok = true;
+	var familiesToPass; //The list of all regions, lists and columns to pass.
+	var family;
+	var bilanPass;
+	var i;
+	do{
+		//Initialize the families to pass and sort it
+		familiesToPass = [];
+		for(i=0;i<this.xyLength;i++){
+			if (this.notPlacedYet.regions[i].Os > 0){
+				familiesToPass.push({familyKind : FAMILY.REGION, id:i, remains : this.notPlacedYet.regions[i].Os + this.notPlacedYet.regions[i].Xs});
+			}				
+			if (this.notPlacedYet.rows[i].Os > 0){
+				familiesToPass.push({familyKind : FAMILY.ROW, id:i, remains : this.notPlacedYet.rows[i].Os + this.notPlacedYet.rows[i].Xs});
+			}
+			if (this.notPlacedYet.columns[i].Os > 0){
+				familiesToPass.push({familyKind : FAMILY.COLUMN, id:i, remains : this.notPlacedYet.columns[i].Os + this.notPlacedYet.columns[i].Xs});
+			}
+		}
+		familiesToPass.sort(function(a,b){return (a.remains-b.remains)});
+		
+		//Perform the passes
+		anyModification = false;
+		for(i=0;i<familiesToPass.length;i++){
+			family = familiesToPass[i];
+			switch(family.familyKind){
+				case FAMILY.ROW: bilanPass = this.passRow(family.id);break;
+				case FAMILY.COLUMN: bilanPass = this.passColumn(family.id);break;
+				case FAMILY.REGION: bilanPass = this.passRegion(family.id);break;
+			}
+			if (bilanPass.result == ERROR){
+				ok = false;
+				this.massUndo();
+				return;
+			}
+			if (bilanPass.result == OK && bilanPass.numberNewEvents > 0){
+				anyModification = true;
+			}
+		}
+	} while(ok && anyModification);
+}
 
 //------------------
 //Putting symbols into spaces. 
