@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>En construction</title>
+        <title>Star Battle solver !!!</title>
 		<link rel="stylesheet" type="text/css" href="../javascript.grid_is_good/style.css">
     </head>
     <body>
 		<canvas id="canevas" width="800" height="500">
             Message pour les navigateurs ne supportant pas encore canvas.
         </canvas></br>
+		Etoiles : <span id="span_stars"></span></br>
+		
 		Grille à charger : <input type="text" id="input_grid_name" value="SternenSchlacht15"></input> 
-		Stars : <input type="number" id="input_number_stars" value="2"></input>
 		<input type="submit" id="submit_load_grid" value="Charger"></input></br>
 		Action à réaliser : <span id="text_canvas_action"></span></br>
 		<input type="submit" id="submit_put_star" value="Placer ETOILE"></input></br>
@@ -25,10 +26,10 @@
 		<textarea id="textarea_happened" style="width:100px; height:200px"></textarea> <!-- TODO ce sont des valeurs en dur-->
 		
 		<script src="../javascript.grid_is_good/constants.js"></script>
-		<script src="../javascript.grid_is_good/drawing.js"></script>
+		<script src="../javascript.grid_is_good/Drawer.js"></script>
 		<script src="../javascript.grid_is_good/other.js"></script>
+		<script src="../javascript.grid_is_good/starBattleEditor/saveLoad.js"></script>
 		<script src="../javascript.grid_is_good/Global.js"></script>
-		<script src="../javascript.grid_is_good/Pix.js"></script>
 		<script src="constants.js"></script>
 		<script src="SpaceEvent.js"></script>
 		<script src="GlobalStarBattle.js"></script>

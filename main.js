@@ -1,5 +1,5 @@
-var pix = new Pix();
-pix.setMarginGrid(32,32,32,32);
+var drawer = new Drawer();
+drawer.setMarginGrid(32,32,32,32);
 var global = new GlobalStarBattle(generateWallGrid(1,1),1);
 //TODO (of course the grid (1,1) is a dummy grid, but at least it has as much rows as columns as regions
 var canevasInteraction = document.getElementById("canevas");
@@ -23,23 +23,23 @@ var colors={
 //--------------------
 //The main draw function (at start)
 function drawCanvas(){
-	drawGridUltimate(context,pix,colors,global);
-	drawAroundIndications(context,pix,colors,global);
-	drawInsideIndications(context,pix,colors,global);
-	drawSpaces(context,pix,colors,global);
+	drawer.drawGrid(context,global);
+	drawAroundIndications(context,drawer,colors,global);
+	drawInsideIndications(context,drawer,colors,global);
+	drawSpaces(context,drawer,colors,global);
 }
 
 //--------------------
 
 setInterval(drawCanvas,30);
 var fieldName = document.getElementById("input_grid_name");
-var fieldStars = document.getElementById("input_number_stars");
+var starSpan = document.getElementById("span_stars");
 var textArea = document.getElementById("textarea_happened");
 
 document.getElementById("submit_load_grid").addEventListener('click',
-	function(event){loadAction(canevas,pix,textArea,global,fieldName.value,fieldStars.value)}
+	function(event){loadAction(canevas,drawer,textArea,global,fieldName.value,starSpan)}
 );
-canevas.addEventListener('click', function(event){clickCanvas(event,canevas,pix,textArea,global,actionToDo)},false);
+canevas.addEventListener('click', function(event){clickCanvas(event,canevas,drawer,textArea,global,actionToDo)},false);
 document.getElementById("submit_undo").addEventListener('click',function(event){undoAction(global,textArea)});
 document.getElementById("submit_multiPass").addEventListener('click',function(event){multiPassAction(global,textArea)});
 
