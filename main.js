@@ -6,6 +6,7 @@ var canevasInteraction = document.getElementById("canevas");
 var	context = canevasInteraction.getContext("2d");
 //var canevasListActions = document.getElementById("canevas_list_actions"); TODO
 var actionToDo;
+var drawIndications;
 
 var colors={
 	closed_wall:'#222222',
@@ -24,8 +25,10 @@ var colors={
 //The main draw function (at start)
 function drawCanvas(){
 	drawer.drawGrid(context,global);
-	drawAroundIndications(context,drawer,colors,global);
-	drawInsideIndications(context,drawer,colors,global);
+	if (document.getElementById("checkbox_drawIndications").checked){
+		drawAroundIndications(context,drawer,colors,global);
+		drawInsideIndications(context,drawer,colors,global);	
+	}
 	drawSpaces(context,drawer,colors,global);
 }
 

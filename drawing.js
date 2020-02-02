@@ -2,15 +2,18 @@
 Draws the around indications
 */
 function drawAroundIndications(p_context,p_drawer,p_colorDigits,p_global){
-	var pixFont = 30;
-	//The starting point of fillText is lower-left.
-	var pixXUpAndDown = p_drawer.pix.marginGrid.left;
-	var pixXRight = p_drawer.pix.marginGrid.left+p_drawer.pix.sideSpace*p_global.xLength;
-	var pixXLeft = 0;	
-	var pixYLeftAndRight = p_drawer.pix.marginGrid.up+pixFont; 
-	var pixYUp = pixFont;
-	var pixYDown = p_drawer.pix.marginGrid.up+p_drawer.pix.sideSpace*p_global.yLength+pixFont;
-	p_context.font = "30px Arial";
+	var pixFont = p_drawer.pix.sideSpace-p_drawer.pix.borderSpace;
+	savedTextAlign = p_context.textAlign;
+	savedTextBaseline = p_context.textBaseline;
+	p_context.textAlign = 'center';
+	p_context.textBaseline = 'middle';
+	var pixXUpAndDown = p_drawer.getCenterX(0);
+	var pixXLeft = p_drawer.getCenterX(-1);	
+	var pixXRight = p_drawer.getCenterX(p_global.xyLength);
+	var pixYLeftAndRight = p_drawer.getCenterY(0); 
+	var pixYUp = p_drawer.getCenterY(-1);
+	var pixYDown = p_drawer.getCenterY(p_global.xyLength);
+	p_context.font = pixFont+"px Arial";
 	for(var i=0;i<p_global.xyLength;i++){
 		p_context.fillStyle = p_colorDigits.starIndication; //TODO perform color management
 		p_context.fillText(p_global.getOsRemainColumn(i),pixXUpAndDown,pixYUp);
@@ -21,6 +24,8 @@ function drawAroundIndications(p_context,p_drawer,p_colorDigits,p_global){
 		pixXUpAndDown += p_drawer.pix.sideSpace;
 		pixYLeftAndRight += p_drawer.pix.sideSpace;
 	}
+	p_context.textAlign = savedTextAlign;
+	p_context.textBaseline = savedTextBaseline;
 }
 
 /**
@@ -36,14 +41,17 @@ function drawInsideIndications(p_context,p_drawer,p_colorDigits,p_global){
 	var firstRegionSpace;
 	for(var i=0;i<p_global.xyLength;i++){
 		firstRegionSpace = p_global.getFirstSpaceRegion(i);
-		pixLeft = p_drawer.pix.marginGrid.left+p_drawer.pix.sideSpace*firstRegionSpace.x+p_drawer.pix.borderSpace+1;//TODO renommer ces variables
-		pixDown = p_drawer.pix.marginGrid.up+p_drawer.pix.sideSpace*firstRegionSpace.y+fontSize;
+		pixLeft = p_drawer.getInnerXLeft(firstRegionSpace.x);
+		pixDown = p_drawer.getInnerYUp(firstRegionSpace.y)+fontSize;
 		textToWrite = p_global.getOsRemainRegion(i)+" "+p_global.getXsRemainRegion(i);
 		p_context.fillText(textToWrite,pixLeft,pixDown);
 	}
 	
 }
 
+/**
+Draws what's inside spaces
+*/
 function drawSpaces(p_context,p_drawer,p_color,p_global){
 	const fontSize = p_drawer.pix.sideSpace;
 	p_context.font = fontSize+"px Arial";
