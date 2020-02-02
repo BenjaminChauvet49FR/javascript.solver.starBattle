@@ -124,7 +124,9 @@ GlobalStarBattle.prototype.emitHypothesis = function(p_x,p_y,p_symbol){
 	var result = this.tryToPutNew(p_x,p_y,p_symbol);
 	if (result != null && result.eventsApplied.length > 0){
 		this.happenedEvents.push(result.eventsApplied);
+		return {result:RESULT.SUCCESS,eventsApplied:result.eventsApplied};
 	}
+	return {result:RESULT.FAILURE,eventsApplied:[]};
 }
 
 //------------------
@@ -208,7 +210,7 @@ GlobalStarBattle.prototype.goForThePass = function(){
 	
 	if (this.pass.spacesToTestArray.length == 0){
 		debugHumanMisclick("Doing a pass on a region/row/column that is already finished !");
-		return {result:HARMLESS};
+		return {result:RESULT.HARMLESS};
 	}
 	
 	this.tryToFillThatSpace(0,[]);
@@ -230,11 +232,11 @@ GlobalStarBattle.prototype.goForThePass = function(){
 		else{
 			debugPass("Unfortunately, this pass lead to nothing");
 		}
-		return {result:OK, numberNewEvents:this.pass.certitudes.length};
+		return {result:RESULT.SUCCESS, numberNewEvents:this.pass.certitudes.length};
 	}
 	else{
 		alertPass("This pass allowed us to see that something went WRONG !");
-		return {result:ERROR};
+		return {result:RESULT.ERROR};
 	}
 }
 
@@ -337,7 +339,7 @@ GlobalStarBattle.prototype.multiPass = function(){
 	var family;
 	var bilanPass;
 	var i;
-	do{
+	/*do{
 		//Initialize the families to pass and sort it
 		familiesToPass = [];
 		for(i=0;i<this.xyLength;i++){
@@ -362,31 +364,106 @@ GlobalStarBattle.prototype.multiPass = function(){
 				case FAMILY.COLUMN: bilanPass = this.passColumn(family.id);break;
 				case FAMILY.REGION: bilanPass = this.passRegion(family.id);break;
 			}
-			if (bilanPass.result == ERROR){
+			if (bilanPass.result == RESULT.ERROR){
 				ok = false;
 				this.massUndo();
 				return;
 			}
-			if (bilanPass.result == OK && bilanPass.numberNewEvents > 0){
+			if (bilanPass.result == RESULT.SUCCESS && bilanPass.numberNewEvents > 0){
 				anyModification = true;
 			}
 		}
-	} while(ok && anyModification);
+	} while(ok && anyModification);*/
+	/*if (ok)
+		return RESULT.SUCCESS;
+	else
+		return RESULT.ERROR;*/
+}
+
+//------------------
+//Autosolve strategy (at random...)
+GlobalStarBattle.prototype.generalSolve = function(){
+	//Perform an autopass.
+		//It works and clears the puzzle : return "SUCCESS"
+		//It doesn't work : return "FAILURE"
+		//It works but doesn't clear the puzzle : 
+			// Randomly picks a O into a space of the non-full region with the largest O/X ratio 
+				// It works and clears the puzzle : return "SUCCESS"
+				// It works but doesn't clear the puzzle : repeat the process and call the result.
+				// It doesn't work : 
+					//Puts an X instead
+					// It works : either SUCCESS or repeat the process and call the result. It fails : FAILURE.
+	var answerPass, answerHypothesis, answer;
+	var answerPass = this.multiPass();
+	if (answerPass == RESULT.ERROR){
+		return RESULT.ERROR;
+	}
+	var indexRegion = -1;
+	var highestRatio;
+	var remainingOs;
+	var ratio;
+	var DEBUGTOTAL = 0;
+	for(var ir=0;ir<this.xyLength;ir++){
+		remainingOs = this.notPlacedYet.regions[ir].Os;
+		if (remainingOs > 0){
+			ratio = remainingOs/this.notPlacedYet.regions[ir].Xs;			
+			if ((indexRegion == -1) || (ratio > highestRatio)){
+				highestRatio = ratio;
+				indexRegion = ir;
+			}
+		}
+		DEBUGTOTAL+= remainingOs+this.notPlacedYet.regions[ir].Xs;
+	}
+	console.log(" YAAAAY ! Merci de l'info ! DEBUGTOTAL = "+DEBUGTOTAL);
+	if (indexRegion == -1){
+		console.log("This is it ! Well played !");
+		return RESULT.SUCCESS;
+	}
+	else{
+		var indexSpace = 0;
+		var spacesOfThisRegion = this.spacesByRegion[indexRegion];
+		var spaceCoordinates = spacesOfThisRegion[indexSpace];
+		while(this.answerGrid[spaceCoordinates.y][spaceCoordinates.x] != UNDECIDED){
+			indexSpace++;
+			spaceCoordinates = spacesOfThisRegion[indexSpace];
+		}
+		
+		//Try with an O
+		answerHypothesis = this.emitHypothesis(spaceCoordinates.x,spaceCoordinates.y,STAR);
+		if (answerHypothesis.result == RESULT.SUCCESS){
+			answer=this.generalSolve();
+		}
+		if (answer == RESULT.SUCCESS){
+			console.log("This is it ! Well done !");
+			return RESULT.SUCCESS;
+		}
+		this.undoList(answerHypothesis.eventsApplied);
+
+		//Try with an X ?
+		answerHypothesis = this.emitHypothesis(spaceCoordinates.x,spaceCoordinates.y,NO_STAR);
+		if (answerHypothesis.result == RESULT.SUCCESS){
+			return this.generalSolve();
+		}
+		this.undoList(answerHypothesis.eventsApplied);
+		return RESULT.ERROR;
+		
+	}
+	
 }
 
 //------------------
 //Putting symbols into spaces. 
 
 /**Tries to put a symbol into the space of a grid. 3 possibilities :
-OK : it was indeed put into the grid ; the number of Os and Xs for this region, row and column are also updated.
-HARMLESS : said symbol was either already put into that space OUT out of bounds beacuse of automatic operation. Don't change anything to the grid and remaining symbols
+RESULT.SUCCESS : it was indeed put into the grid ; the number of Os and Xs for this region, row and column are also updated.
+RESULT.HARMLESS : said symbol was either already put into that space OUT out of bounds beacuse of automatic operation. Don't change anything to the grid and remaining symbols
 ERROR : there is a different symbol in that space. We have done a wrong hypothesis somewhere ! (or the grid was wrong at the basis !)
 This is also used at grid start in order to put Xs in banned spaces, hence the check in the NO_STAR part.
 */
 GlobalStarBattle.prototype.putNew = function(p_x,p_y,p_symbol){
 	if ((p_x < 0) || (p_x >= this.xyLength) || (p_y < 0) || (p_y >= this.xyLength) || 
 	(this.answerGrid[p_y][p_x] == p_symbol)){
-		return HARMLESS;
+		return RESULT.HARMLESS;
 	}
 	if (this.answerGrid[p_y][p_x] == UNDECIDED){
 		this.answerGrid[p_y][p_x] = p_symbol;
@@ -403,11 +480,11 @@ GlobalStarBattle.prototype.putNew = function(p_x,p_y,p_symbol){
 			this.notPlacedYet.rows[p_y].Xs--;
 			this.notPlacedYet.columns[p_x].Xs--;	
 		}
-		return OK;
+		return RESULT.SUCCESS;
 	}
 	if (this.answerGrid[p_y][p_x] != p_symbol){
 		debugTryToPutNew("NOOOO !");
-		return ERROR;
+		return RESULT.ERROR;
 	}
 
 
@@ -465,9 +542,9 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 		symbol = spaceEventToApply.symbol;
 		debugTryToPutNew("Now let's try to add : "+spaceEventToApply.toString());
 		putNewResult = this.putNew(x, y,symbol);
-		ok = (putNewResult != ERROR);
-		if (putNewResult == OK){
-			r = this.getRegion(x,y); //(y,x) might be out of bounds, if so the putNewResult isn't supposed to be OK. Hence the check only here.
+		ok = (putNewResult != RESULT.ERROR);
+		if (putNewResult == RESULT.SUCCESS){
+			r = this.getRegion(x,y); //(y,x) might be out of bounds, if so the putNewResult isn't supposed to be RESULT.SUCCESS. Hence the check only here.
 			if (symbol == STAR){
 				//Add to all 7 neighbors (no one should be star if solved correctly)
 				for(roundi=0;roundi<=7;roundi++){
@@ -545,7 +622,7 @@ GlobalStarBattle.prototype.tryToPutNew = function(p_x,p_y,p_symbol){
 				}
 			}
 			eventsApplied.push(spaceEventToApply);
-		} // if OK
+		} // if RESULT.SUCCESS
 	}
 	
 	//Mistakes were made, we should undo everything 
@@ -575,6 +652,7 @@ GlobalStarBattle.prototype.massUndo = function(){
 Cancels a list of events passed in argument
 */
 GlobalStarBattle.prototype.undoList = function(p_list){
+	console.log("We are going to undo a list of : "+p_list.length);
 	var spaceEventToUndo;
 	while (p_list.length !=0){
 		spaceEventToUndo = p_list.pop();

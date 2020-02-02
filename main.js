@@ -42,6 +42,7 @@ document.getElementById("submit_load_grid").addEventListener('click',
 canevas.addEventListener('click', function(event){clickCanvas(event,canevas,drawer,textArea,global,actionToDo)},false);
 document.getElementById("submit_undo").addEventListener('click',function(event){undoAction(global,textArea)});
 document.getElementById("submit_multiPass").addEventListener('click',function(event){multiPassAction(global,textArea)});
+document.getElementById("submit_solve").addEventListener('click',function(event){solveAction(global,textArea)});
 
 //Submits of click on a grid : what will happen ? (TODO : the word action is pretty generic)
 var submitPutStar = document.getElementById("submit_put_star");
@@ -78,7 +79,7 @@ function addEventListenerAndCaptionActionSubmit(p_submitElement,p_action){
 //TODO create a separate file ?
 
 function debugTryToPutNew(p_string){
-	//console.log(p_string)
+	console.log(p_string)
 }
 function debugPass(p_string){
 	console.log(p_string);
@@ -87,5 +88,5 @@ function debugHumanMisclick(p_string){
 	console.log("Human misclick ? "+p_string);
 }
 function alertPass(p_string){
-	alert(p_string);
+	//alert(p_string);
 }

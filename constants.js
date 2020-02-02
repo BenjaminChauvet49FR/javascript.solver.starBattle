@@ -6,9 +6,11 @@ STAR = 'O';
 NO_STAR = 'X';
 UNDECIDED = '-';
 
-OK = 3;
-ERROR = 1;
-HARMLESS = 2;
+const RESULT = {
+SUCCESS : 3,
+ERROR : 1,
+HARMLESS : 2
+}
 
 const COHERENCE ={SUCCESS:1,FAILURE:2};
 const FAMILY ={REGION:1,ROW:2,COLUMN:3};

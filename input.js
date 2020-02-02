@@ -48,6 +48,11 @@ multiPassAction = function (p_global,p_textArea){
 	//TODO also manage the rewriting of the events.
 }
 
+solveAction = function (p_global,p_textArea){
+	p_global.generalSolve();
+	p_textArea.innerHTML = p_global.happenedEventsToString(false); //TODO see above
+}
+
 //--------------------------
 
 /** 
