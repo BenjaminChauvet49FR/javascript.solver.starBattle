@@ -339,7 +339,7 @@ GlobalStarBattle.prototype.multiPass = function(){
 	var family;
 	var bilanPass;
 	var i;
-	/*do{
+	do{
 		//Initialize the families to pass and sort it
 		familiesToPass = [];
 		for(i=0;i<this.xyLength;i++){
@@ -373,11 +373,11 @@ GlobalStarBattle.prototype.multiPass = function(){
 				anyModification = true;
 			}
 		}
-	} while(ok && anyModification);*/
-	/*if (ok)
+	} while(ok && anyModification);
+	if (ok)
 		return RESULT.SUCCESS;
 	else
-		return RESULT.ERROR;*/
+		return RESULT.ERROR;
 }
 
 //------------------
@@ -393,7 +393,7 @@ GlobalStarBattle.prototype.generalSolve = function(){
 				// It doesn't work : 
 					//Puts an X instead
 					// It works : either SUCCESS or repeat the process and call the result. It fails : FAILURE.
-	var answerPass, answerHypothesis, answer;
+	/*var answerPass, answerHypothesis, answer;
 	var answerPass = this.multiPass();
 	if (answerPass == RESULT.ERROR){
 		return RESULT.ERROR;
@@ -447,7 +447,7 @@ GlobalStarBattle.prototype.generalSolve = function(){
 		this.undoList(answerHypothesis.eventsApplied);
 		return RESULT.ERROR;
 		
-	}
+	}*/
 	
 }
 
