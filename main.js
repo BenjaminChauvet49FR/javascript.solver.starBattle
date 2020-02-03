@@ -25,16 +25,16 @@ var colors={
 //The main draw function (at start)
 function drawCanvas(){
 	drawer.drawGrid(context,global);
+	drawInsideSpaces(context,drawer,colors,global);
 	if (document.getElementById("checkbox_drawIndications").checked){
 		drawAroundIndications(context,drawer,colors,global);
 		drawInsideIndications(context,drawer,colors,global);	
 	}
-	drawSpaces(context,drawer,colors,global);
 }
 
+setInterval(drawCanvas,30);
 //--------------------
 
-setInterval(drawCanvas,30);
 var fieldName = document.getElementById("input_grid_name");
 var starSpan = document.getElementById("span_stars");
 var textArea = document.getElementById("textarea_happened");
